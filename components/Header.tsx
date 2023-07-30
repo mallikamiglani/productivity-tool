@@ -31,6 +31,7 @@ function Header() {
             <Image
                 src = {logo}
                 alt = "Tool logo"
+                priority = {true}
                 className = "w-44 md:w-50 pb-5 md:pb-0 object-contain"
             />
             {/* Right side */}
