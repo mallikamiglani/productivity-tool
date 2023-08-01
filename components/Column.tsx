@@ -2,6 +2,7 @@ import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import TodoCard from './TodoCard'
+import { useBoardStore } from '@/store/BoardStore'
 
 type Props = {
     id: TypeColumn,
@@ -17,7 +18,10 @@ const idToColumnHeader: {
     "done": "Done",
 }
 function Column({id, todos, index}:Props) {
-  return (
+    const [searchString] = useBoardStore((state) => [
+        state.searchString,
+    ])
+    return (
     <Draggable draggableId={id} index={index}>
         {(provided) => (
             <div 
@@ -36,12 +40,18 @@ function Column({id, todos, index}:Props) {
                             <h2 className='flex justify-between font-bold text-xl p-2 text-gray-800'>
                                 {idToColumnHeader[id]}
                                 <span className='text-gray-500 bg-gray-200 rounded-full px-2.5 py-1 text-sm font-normal'>
-                                    {todos.length}
-                                </span>
+                                    {!searchString ? todos.length : todos.filter(todo =>
+                                    todo.title.toLowerCase().includes(searchString.toLowerCase())).length}
+                                </span> 
                             </h2>
-
                             <div className='space-y-2'>
-                                {todos.map((todo, index) =>
+                                {todos.map((todo, index) => {
+                                    
+                                    if(searchString && 
+                                        !todo.title.toLowerCase().includes(searchString.toLowerCase())){
+                                            return null;
+                                        }
+                                    return (
                                     <Draggable
                                         key={todo.$id}
                                         draggableId={todo.$id}
@@ -57,7 +67,8 @@ function Column({id, todos, index}:Props) {
                                                 dragHandleProps={provided.dragHandleProps}
                                             />
                                         )}
-                                    </Draggable>
+                                    </Draggable>)
+                                }
                                 )}
 
                                 {provided.placeholder}

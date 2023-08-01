@@ -18,7 +18,7 @@ function Board() {
 
     // droppable id = index of draggable area, index = index within droppable id
     const handleOnDragEnd = (result: DropResult) => {
-        const {destination,source, type} = result;
+        const {destination, source, type} = result;
 
         // if dragged outside board
         if (!destination) return;
