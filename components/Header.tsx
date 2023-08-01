@@ -4,12 +4,33 @@ import logo from "@/images/productivity-tool-logo.png"
 import {MagnifyingGlassIcon, UserCircleIcon} from "@heroicons/react/24/solid"
 import Avatar from "react-avatar"
 import { useBoardStore } from "@/store/BoardStore"
+import { useEffect, useState } from "react"
+import fetchSuggestion from "@/lib/fetchSuggestion"
 
 function Header() {
-    const [searchString, setSearchString] = useBoardStore((state) =>[
+    const [board, searchString, setSearchString] = useBoardStore((state) =>[
+        state.board,
         state.searchString,
         state.setSearchString,
     ])
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [suggestion, setSuggestion] = useState<string>("");
+
+    useEffect(() => {
+        if(!board.columns.size) return;
+
+        setLoading(true);
+        const useSuggestion = async() => {
+            const suggestion = await fetchSuggestion(board);
+            setSuggestion(suggestion);
+            setLoading(false);
+        }
+
+        useSuggestion();
+
+    }, [board])
+
   return (
     <header>
         <div className="flex flex-col md:flex-row items-center p-5 bg-gray-500/10 rounded-b-2xl">
@@ -59,8 +80,8 @@ function Header() {
         </div>
         <div className = "flex items-center justify-center py-2 md:py-5 px-5">
             <p className = "flex items-center p-2 bg-white pr-5 shadow-xl rounded-xl w-fit font-light text-sm italic max-w-3xl text-[#0399DE]">
-                <UserCircleIcon className = "h-10 w-10 mr-1" color = "#0399DE"/>
-                GPT summary here!
+                <UserCircleIcon className = {`h-10 w-10 mr-1" color = "#0399DE ${loading && "animate-spin"}`}/>
+                {!loading && suggestion ? suggestion : "Hold on while GPT summarizes your tasks..."}
             </p>
         </div>
     </header>
