@@ -2,7 +2,6 @@ import Column from "@/components/Column";
 
 const formatTodosForAI = (board: Board) => {
     const todos = Array.from(board.columns.entries());
-    console.log("NON FLATTENED TODOS:", todos);
     const flatTodos = todos.reduce((map, [key, val]) => {
         map[key] = val.todos;
         return map;
@@ -17,7 +16,6 @@ const formatTodosForAI = (board: Board) => {
 
 const fetchSuggestion = async(board: Board) => {
     const todos = formatTodosForAI(board);
-    console.log("FLATTENED TODOS here:", todos);
     const res = await fetch("/api/generateSummary", {
         method: "POST",
         headers: { 
@@ -25,11 +23,8 @@ const fetchSuggestion = async(board: Board) => {
         },
         body: JSON.stringify({todos}),
     });
-    // console.info(res.json());
-    console.log("CHECKPOINT 2");
     const GPTdata = await res.json();
     const {content} = GPTdata;
-    console.log("CONTENT HERE:",content);
     return content;
 };
 

@@ -2,9 +2,7 @@ import openai from "@/openai";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request){
-    console.log("Checkpoint 1");
     const {todos} = await request.json();
-    console.log("TODOS FROM ROUTE HERE:", todos);
 
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
@@ -24,9 +22,6 @@ export async function POST(request: Request){
     })
 
     const {data} = response;
-
-    console.log("Data is:", data);
-    console.log("Message:", data.choices[0].message);
 
     return NextResponse.json(data.choices[0].message);
 }
