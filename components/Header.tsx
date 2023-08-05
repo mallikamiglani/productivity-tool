@@ -21,13 +21,13 @@ function Header() {
         if(!board.columns.size) return;
 
         setLoading(true);
-        const useSuggestion = async() => {
+        const insertSuggestion = async() => {
             const suggestion = await fetchSuggestion(board);
             setSuggestion(suggestion);
             setLoading(false);
         }
 
-        useSuggestion();
+        insertSuggestion();
 
     }, [board])
 
